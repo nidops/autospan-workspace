@@ -1,0 +1,68 @@
+# Track only the workspace manager's own files and directories.
+# Add intentional new root files here; everything else stays local.
+/*
+!/.gitignore
+!/.pre-commit-config.yaml
+!/Kconfig
+!/LICENSE
+!/Makefile
+!/README.md
+!/CONTRIBUTING.md
+!/SECURITY.md
+!/pyproject.toml
+!/repos.example.yaml
+!/requirements-tools.txt
+!/.github/
+!/aworkspace/
+!/configs/
+!/docs/
+!/scripts/
+!/tests/
+
+# Managed checkouts keep their own independent Git repositories.
+/repos/
+
+# Local choices, credentials and generated state
+/repos.local.yaml
+*.local.yaml
+*.local.yml
+.env
+.env.*
+/artifacts/
+/.config
+/.config.old
+/.generated/
+
+# Local Python tooling and isolated environments
+/.tools/
+/.envs/
+/.venv/
+/venv/
+
+# Python build / cache outputs
+__pycache__/
+*.py[cod]
+*.egg-info/
+/build/
+/dist/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.tox/
+.nox/
+
+# Coverage reports
+.coverage
+.coverage.*
+/coverage.xml
+/htmlcov/
+
+# Editors and operating systems
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

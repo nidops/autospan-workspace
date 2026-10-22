@@ -1,0 +1,11 @@
+mainmenu "AutoSpan Workspace"
+
+menu "Environment"
+config AUTOSPAN_EDITABLE
+    bool "Install selected Python components in editable mode"
+    default y
+    help
+      Useful for development. Releases should pin and lock dependencies.
+endmenu
+
+source ".generated/components.Kconfig"

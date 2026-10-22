@@ -1,0 +1,10 @@
+files: ^(aworkspace|scripts|tests)/
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Keep this version aligned with requirements-tools.txt.
+    rev: v0.13.3
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format

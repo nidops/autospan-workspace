@@ -1,0 +1,63 @@
+name: checks
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  workspace:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.11', '3.12', '3.13', '3.14']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -r requirements-tools.txt
+      - run: python -m pytest -q tests
+        env:
+          AUTO_WORKSPACE_E2E: '1'
+      - run: python -m pre_commit run --all-files --show-diff-on-failure
+      - run: python -m compileall -q aworkspace scripts tests
+
+  reference-ble:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements-tools.txt
+      - name: Read the catalog's BLE branch reference
+        id: reference
+        shell: python
+        run: |
+          import os
+          import yaml
+          from pathlib import Path
+          doc = yaml.safe_load(Path('repos.example.yaml').read_text(encoding='utf-8'))
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              print('sha=' + doc['repositories']['autospan-ble']['revision'], file=output)
+      - uses: actions/checkout@v4
+        with:
+          repository: nidops/autospan-ble
+          ref: ${{ steps.reference.outputs.sha }}
+          path: .reference/ble
+          # Private reference repositories need a read-only token with access.
+          token: ${{ secrets.AUTOSPAN_READ_TOKEN || github.token }}
+          persist-credentials: false
+      - run: python -m pytest -q tests/test_reference_ble.py
+        env:
+          AUTO_WORKSPACE_BLE_E2E: '1'
+          AUTO_WORKSPACE_BLE_SOURCE: .reference/ble
+      - run: python scripts/check_links.py --repository nidops/autospan-ble=.reference/ble

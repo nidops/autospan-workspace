@@ -1,0 +1,46 @@
+# Copy to repos.local.yaml. AutoSpan and StructWire use their v1.0.0 release tags.
+# BLE tracks master (latest, not reproducible).
+# Use full commit SHAs to keep source revisions fixed.
+# Python dependencies come from package metadata; select source components for development.
+# Keep private repositories and credentials in the ignored local catalog.
+schema: 1
+repositories:
+  autospan:
+    url: https://github.com/nidops/autospan.git
+    revision: v1.0.0
+    default: false
+    python:
+      distribution: autospan
+      features:
+        tests: {extra: test, default: true}
+        tui: {extra: tui, default: false}
+    tests: [tests]
+  structwire:
+    url: https://github.com/nidops/structwire.git
+    revision: v1.0.0
+    default: false
+    python:
+      distribution: structwire
+      features:
+        tests: {extra: test, default: true}
+    tests: [tests]
+  autospan-ble:
+    plugin: true
+    url: https://github.com/nidops/autospan-ble.git
+    revision: master
+    default: false
+    python:
+      distribution: autospan-ble
+      features:
+        tests: {extra: test, default: true}
+    tests: [tests]
+
+# Add a real project when needed; component names are not hardcoded:
+#  customer-tests:
+#    plugin: true
+#    url: git@github.com:CUSTOMER/customer-tests.git
+#    revision: REPLACE_WITH_COMMIT_SHA
+#    default: false
+#    # depends: (e.g: [autospan]) selects additional Git source checkouts for development.
+#    python: {distribution: customer-tests}
+#    tests: [tests]
